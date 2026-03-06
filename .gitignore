@@ -1,0 +1,17 @@
+# Visual Studio / .NET
+.vs/
+*.user
+*.suo
+*.cache
+bin/
+obj/
+
+# Angular / Node.js
+ETicaretClient/node_modules/
+ETicaretClient/dist/
+ETicaretClient/.angular/
+ETicaretClient/.env
+
+# Genel OS dosyaları
+Thumbs.db
+.DS_Store
