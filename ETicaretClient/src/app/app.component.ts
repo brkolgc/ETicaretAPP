@@ -11,5 +11,5 @@ export class AppComponent {
   constructor() {
   }
 }
-$.get("https://localhost:7130/api/products" , data =>{console.log(data)});
+//$.get("https://localhost:7130/api/products" , data =>{console.log(data)});
 
