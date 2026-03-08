@@ -2,6 +2,7 @@
 using ETicaretAPI.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETicaretAPI.API.Controllers
 {
@@ -25,8 +26,11 @@ namespace ETicaretAPI.API.Controllers
         }
 
         [HttpGet]
-        public async Task Get()
+        public async Task<IActionResult> Get()
         {
+            var order =  _orderReadRepository.GetAll();
+            return Ok(order);
+
             //var customerId = Guid.NewGuid();
             //await _customerWriteRepository.AddAsync(new() { Id = customerId, Name = "Burak" });
 
@@ -34,10 +38,12 @@ namespace ETicaretAPI.API.Controllers
 
             //await _orderWriteRepository.AddAsync(new() { Description = "test2", Address = "İstanbul2", CustomerId = customerId });
 
-            var order = await _orderReadRepository.GetByIdAsync("66e9e93b-b79e-4e24-9f3c-5a55154bb539");
+            //var order = await _orderReadRepository.GetByIdAsync("66e9e93b-b79e-4e24-9f3c-5a55154bb539");
 
-            order.Description = "test12321321";
-            await _orderWriteRepository.SaveAsync();
+            //order.Description = "aaaaaaaaaaaa";
+            //await _orderWriteRepository.SaveAsync();
+
+
         }
 
     }
