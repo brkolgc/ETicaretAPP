@@ -15,18 +15,6 @@ export class DashboardComponent extends BaseComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.showSpinner(SpinnerType.BallSpinClockwiseFadeRotating);
   }
 
-  m() {
-    this.alertify.message("selam", {
-      messageType: MessageType.Success,
-      delay: 5,
-      position: Position.TopRight
-    })
-  }
-
-  d() {
-    this.alertify.dismissAll();
-  }
 }
