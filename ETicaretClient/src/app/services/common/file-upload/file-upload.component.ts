@@ -7,6 +7,8 @@ import { CustomToastrService, ToastrMessageType, ToastrPosition } from '../../ui
 import { MatDialog } from '@angular/material/dialog';
 import { FileUploadDialogComponent, FileUploadDialogState } from 'src/app/dialogs/file-upload-dialog/file-upload-dialog.component';
 import { DialogService } from '../dialog.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { SpinnerType } from 'src/app/base/base.component';
 
 @Component({
   selector: 'app-file-upload',
@@ -15,7 +17,7 @@ import { DialogService } from '../dialog.service';
 })
 export class FileUploadComponent {
 
-  constructor(private httpClientService: HttpClientService, private alertifyService: AlertifyService, private customToastrService: CustomToastrService, private dialog: MatDialog, private dialogService: DialogService) { }
+  constructor(private httpClientService: HttpClientService, private alertifyService: AlertifyService, private customToastrService: CustomToastrService, private dialog: MatDialog, private dialogService: DialogService, private spinner: NgxSpinnerService) { }
 
   public files: NgxFileDropEntry[];
 
@@ -33,6 +35,8 @@ export class FileUploadComponent {
       componentType: FileUploadDialogComponent,
       data: FileUploadDialogState.Yes,
       afterClosed: () => {
+        this.spinner.show(SpinnerType.BallAtom);
+
         this.httpClientService.post({
           controller: this.options.controller,
           action: this.options.action,
@@ -40,6 +44,9 @@ export class FileUploadComponent {
           headers: new HttpHeaders({ "responseType": "blob" })
         }, fileData).subscribe(data => {
           const message: string = "Dosyalar başarıyla yüklenmiştir.";
+
+          this.spinner.hide(SpinnerType.BallAtom);
+          
           if (this.options.isAdminPage) {
             this.alertifyService.message(message, {
               dismissOthers: true,
@@ -52,12 +59,9 @@ export class FileUploadComponent {
               position: ToastrPosition.TopRight
             });
           }
+          
         }, (errorResponse: HttpErrorResponse) => {
-          console.log("STATUS:", errorResponse.status);
-          console.log("MESSAGE:", errorResponse.message);
-          console.log("ERROR:", errorResponse.error);
-          console.log("FULL:", errorResponse);
-
+          this.spinner.hide(SpinnerType.BallAtom);
           const message: string = "Dosyalar yüklenirken beklenmeyen hata oluştu.";
           if (this.options.isAdminPage) {
             this.alertifyService.message(message, {
