@@ -1,4 +1,5 @@
 using ETicaretAPI.Application.Validators.Products;
+using ETicaretAPI.Infrastructure;
 using ETicaretAPI.Infrastructure.Filters;
 using ETicaretAPI.Persistence;
 using FluentValidation;
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 //ioc container service
 builder.Services.AddPersistenceServices();
+builder.Services.AddInfrastructureServices();
 
 //cors
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
@@ -34,6 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseCors();
 
 app.UseHttpsRedirection();
