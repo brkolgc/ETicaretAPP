@@ -1,4 +1,5 @@
 ﻿using ETicaretAPI.Application.Services;
+using ETicaretAPI.Infrastructure.Operations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -37,9 +38,22 @@ namespace ETicaretAPI.Infrastructure.Services
             }
         }
 
-        public Task<string> FileRenameAsync(string fileName)
+        async Task<string> FileRenameAsync(string path, string fileName)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                string extension = Path.GetExtension(fileName);
+                string baseName = Path.GetFileNameWithoutExtension(fileName);
+                string newFileName = $"{FileNameOperation.CharacterRegulatory(baseName)}{extension}";
+
+                int counter = 1;
+                while (File.Exists(Path.Combine(path, newFileName)))
+                {
+                    newFileName = $"{FileNameOperation.CharacterRegulatory(baseName)}-{counter}{extension}";
+                    counter++;
+                }
+                return newFileName;
+            });
         }
 
         public async Task<List<(string fileName, string path)>> UploadAsync(string path, IFormFileCollection files)
@@ -55,13 +69,13 @@ namespace ETicaretAPI.Infrastructure.Services
 
                 foreach (IFormFile file in files)
                 {
-                    string fileNewName = await FileRenameAsync(file.FileName);
+                    string fileNewName = await FileRenameAsync(uploadPath, file.FileName);
 
                     bool result = await CopyFileAsync(Path.Combine(uploadPath, fileNewName), file);
                     datas.Add((fileNewName, Path.Combine(uploadPath, fileNewName)));
                     results.Add(result);
                 }
-                if(results.TrueForAll(r => r.Equals(true)))
+                if (results.TrueForAll(r => r.Equals(true)))
                     return datas;
 
                 //todo eğer yukarıdaki if geçerli değilse burada dosyaların sunucuda yüklenirken hata alındığına dair uyarıcı exception oluşturulacak
