@@ -13,7 +13,7 @@ namespace ETicaretAPI.Infrastructure.Services.Storage.Local
             _webHostEnvironment = webHostEnvironment;
         }
         public async Task DeleteAsync(string path, string fileName)
-            => File.Delete($"{path}\\{fileName}");
+            => File.Delete(Path.Combine(path, fileName));
 
         public List<string> GetFiles(string path)
         {
@@ -22,7 +22,7 @@ namespace ETicaretAPI.Infrastructure.Services.Storage.Local
         }
 
         public bool HasFile(string path, string fileName)
-            => File.Exists($"{path}\\{fileName}");
+            => File.Exists(Path.Combine(path, fileName));
 
         public async Task<List<(string fileName, string pathOrContainerName)>> UploadAsync(string path, IFormFileCollection files)
         {
@@ -36,7 +36,7 @@ namespace ETicaretAPI.Infrastructure.Services.Storage.Local
 
                 foreach (IFormFile file in files)
                 {
-                    string fileNewName = await FileRenameAsync(path, file.FileName, HasFile);
+                    string fileNewName = await FileRenameAsync(uploadPath, file.FileName, HasFile);
 
                     await CopyFileAsync(Path.Combine(uploadPath, fileNewName), file);
                     datas.Add((fileNewName, Path.Combine(path, fileNewName)));
