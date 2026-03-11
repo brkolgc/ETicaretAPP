@@ -1,0 +1,31 @@
+[33m712e593[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: reset: moving to HEAD~3
+[33m2f4aec0[m HEAD@{1}: commit: Remove appsettings.json from git tracking
+[33md13eac2[m HEAD@{2}: commit (amend): Azure Blob Storage Service Integration (Server Side)
+[33m17cea87[m HEAD@{3}: commit: Azure Blob Storage Service Integration (Server Side)
+[33m598b3e2[m HEAD@{4}: commit: Azure Blob Storage Service Integration (Server Side)
+[33m712e593[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{5}: commit: Preparing storage infrastructure for file management (Server Side)
+[33m6ecabdb[m HEAD@{6}: commit: Saving files to the database using a 'Table Per Hierarchy' (Server Side)
+[33ma96e612[m HEAD@{7}: commit (amend): File Upload - SEO-Friendly File Name Optimization (Server Side)
+[33m565d9f2[m HEAD@{8}: commit: Upload File - SEO-Friendly File Name Optimization (Server Side)
+[33mefbddcb[m HEAD@{9}: commit: File Upload Service (Client - Server Side)
+[33m2bff475[m HEAD@{10}: commit: Using Directive with Delete (Angular)
+[33m96a9f7c[m HEAD@{11}: commit: List Product with Pagination (Client&Server)
+[33ma3d9051[m HEAD@{12}: commit: ValidationFilter with Fluent Validation (Server-Side)
+[33mf7e4768[m HEAD@{13}: commit: Create Product Service - AdminPanel UI (Angular)
+[33md2a1a07[m HEAD@{14}: commit: Custom HttpClient Service (Angular)
+[33m1ff58d6[m HEAD@{15}: commit: CORS Policy
+[33mf03d6e7[m HEAD@{16}: commit: Customize Spinner Service (Angular)
+[33m24b2618[m HEAD@{17}: commit: Customize Notification Service with Toastr (Angular)
+[33m02c44d0[m HEAD@{18}: commit: Customize Notification Service with Alertify (Angular)
+[33m00b1ace[m HEAD@{19}: commit: Bootstrap&Jquery Integration (Angular)
+[33mcae4242[m HEAD@{20}: commit: Material Inf. Integration (Angular)
+[33mac20b75[m HEAD@{21}: commit: Build Multiple Layouts and Routing (Angular)
+[33m9c8ae84[m HEAD@{22}: commit: Create Modules and Components (Angular)
+[33mae2e5c0[m HEAD@{23}: commit: Restore Angular Client
+[33mcab6fef[m HEAD@{24}: commit: SaveChanges Interceptor
+[33m693cb87[m HEAD@{25}: commit: EFCore Tracking Performance Optimization
+[33m69c886e[m HEAD@{26}: commit: Build Repository Design Pattern
+[33meada8e9[m HEAD@{27}: commit: Generate entities, dbcontext with postgresql and set static connectionstring with ConfigurationManager
+[33m3b3f48b[m HEAD@{28}: commit: Build Onion Architecture and test with dummy datas
+[33m9467dca[m HEAD@{29}: Branch: renamed refs/heads/master to refs/heads/main
+[33m9467dca[m HEAD@{31}: commit (initial): First commit: Blank Solution + Angular client

@@ -129,7 +129,19 @@ namespace ETicaretAPI.API.Controllers
             //var p3 = _productImageFileReadRepository.GetAll();
 
 
-            var datas = await _storageService.UploadAsync("resource/product-images", Request.Form.Files);
+            //var datas = await _storageService.UploadAsync("resource/product-images", Request.Form.Files);
+            //await _productImageFileWriteRepository.AddRangeAsync(datas.Select(
+            //     d => new ProductImageFile()
+            //     {
+            //         FileName = d.fileName,
+            //         Path = d.pathOrContainerName,
+            //         Storage = _storageService.StorageName
+            //     }).ToList());
+
+            //await _productImageFileWriteRepository.SaveAsync();
+
+
+            var datas = await _storageService.UploadAsync("files", Request.Form.Files);
             await _productImageFileWriteRepository.AddRangeAsync(datas.Select(
                  d => new ProductImageFile()
                  {
@@ -139,6 +151,7 @@ namespace ETicaretAPI.API.Controllers
                  }).ToList());
 
             await _productImageFileWriteRepository.SaveAsync();
+
 
             return Ok();
         }

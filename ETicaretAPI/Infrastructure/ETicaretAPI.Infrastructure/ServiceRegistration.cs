@@ -2,6 +2,7 @@
 using ETicaretAPI.Infrastructure.Enums;
 using ETicaretAPI.Infrastructure.Services;
 using ETicaretAPI.Infrastructure.Services.Storage;
+using ETicaretAPI.Infrastructure.Services.Storage.Azure;
 using ETicaretAPI.Infrastructure.Services.Storage.Local;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -18,11 +19,13 @@ namespace ETicaretAPI.Infrastructure
         {
             serviceCollection.AddScoped<IStorageService, StorageService>();
         }
-        public static void AddStorage<T>(this IServiceCollection serviceCollection) where T : class, IStorage
+        public static void AddStorage<T>(this IServiceCollection serviceCollection) where T : Storage, IStorage
         {
             serviceCollection.AddScoped<IStorage, T>();
         }
 
+
+        //farklı kullanım için örnek olsun. bu şekilde de kullanılabilir fakat burada bağımlılık oluşuyor her storage servisinde gelip buraya eklememiz lazım. üstteki generic yapılanmada gerek kalmadan program.cs'te ilgili concrete nesneyi vermek yeterli
         public static void AddStorage(this IServiceCollection serviceCollection, StorageType storageType) 
         {
             switch (storageType)
@@ -31,6 +34,7 @@ namespace ETicaretAPI.Infrastructure
                     serviceCollection.AddScoped<IStorage, LocalStorage>();
                     break;
                 case StorageType.Azure:
+                    serviceCollection.AddScoped<IStorage, AzureStorage>();
                     break;
                 case StorageType.AWS:
                     break;

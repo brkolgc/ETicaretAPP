@@ -1,11 +1,10 @@
 ﻿using ETicaretAPI.Application.Abstractions.Storage.Local;
-using ETicaretAPI.Infrastructure.Operations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
 namespace ETicaretAPI.Infrastructure.Services.Storage.Local
 {
-    public class LocalStorage : ILocalStorage
+    public class LocalStorage : Storage, ILocalStorage
     {
         readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -37,14 +36,12 @@ namespace ETicaretAPI.Infrastructure.Services.Storage.Local
 
                 foreach (IFormFile file in files)
                 {
-                    //string fileNewName = await FileRenameAsync(uploadPath, file.FileName);
+                    string fileNewName = await FileRenameAsync(path, file.FileName, HasFile);
 
-                    await CopyFileAsync(Path.Combine(uploadPath, file.Name), file);
-                    datas.Add((file.Name, Path.Combine(path, file.Name)));
+                    await CopyFileAsync(Path.Combine(uploadPath, fileNewName), file);
+                    datas.Add((fileNewName, Path.Combine(path, fileNewName)));
                 }
-
                 return datas;
-
             }
             catch (Exception ex)
             {

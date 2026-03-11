@@ -5,6 +5,7 @@
 *.cache
 bin/
 obj/
+appsettings.json
 
 # Angular / Node.js
 ETicaretClient/node_modules/
