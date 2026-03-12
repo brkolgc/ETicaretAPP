@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Product Images</h2>
+<h2 mat-dialog-title>Ürün Resimleri - Resim Ekle/Sil</h2>
 <mat-dialog-content class="mat-typography">
   <app-file-upload [options]="options"></app-file-upload>
 
@@ -8,12 +8,12 @@
     <img mat-card-image [src]="image.path" alt="Photo of a Shiba Inu">
     <mat-card-content></mat-card-content>
     <mat-card-actions>
-      <button class="btn-delete" matButton (click)="deleteImage(image.id,$event)">Delete</button>
+      <button class="btn-delete" matButton (click)="deleteImage(image.id,$event)">Sil</button>
     </mat-card-actions>
   </mat-card>
 
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button matButton mat-dialog-close>Cancel</button>
+  <button matButton mat-dialog-close>İptal</button>
 </mat-dialog-actions>
