@@ -12,7 +12,10 @@
             <label for="password" class="form-label">Şifre</label>
             <input #txtPassword type="password" class="form-control" id="password" placeholder="Şifre">
         </div>
-        <button type="submit" class="btn btn-primary" (click)="login(txtUserNameOrEmail.value,txtPassword.value)">Giriş
+
+        <asl-google-signin-button></asl-google-signin-button>
+
+        <button type="submit" class="btn btn-primary" id="btnLogin" (click)="login(txtUserNameOrEmail.value,txtPassword.value)">Giriş
             Yap</button>
     </div>
     <div class="col-md-3"></div>
