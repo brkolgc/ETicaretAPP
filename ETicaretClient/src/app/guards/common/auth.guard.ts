@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTr
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
+import { _isAuthenticated, AuthService } from 'src/app/services/common/auth.service';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from 'src/app/services/ui/custom-toastr.service';
 
 @Injectable({
@@ -16,18 +17,18 @@ export class AuthGuard extends BaseComponent implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     this.showSpinner(SpinnerType.BallAtom);
-    const token: string = localStorage.getItem("accessToken");
-    let expired: boolean;
+    // const token: string = localStorage.getItem("accessToken");
+    // let expired: boolean;
 
-    try {
-      expired = this.jwtHelper.isTokenExpired(token);
-    } catch {
-      //geçerli token olmaması durumunda expired = true
-      expired = true;
-    }
+    // try {
+    //   expired = this.jwtHelper.isTokenExpired(token);
+    // } catch {
+    //   //geçerli token olmaması durumunda expired = true
+    //   expired = true;
+    // }
 
     //token yoksa veya expired edilmişse
-    if (!token || expired) {
+    if (!_isAuthenticated) {
       this.router.navigate(["login"], { queryParams: { returnUrl: state.url } });
       this.toastrService.message("Oturum açmanız gerekmektedir", "Yetkisiz Erişim", {
         messageType: ToastrMessageType.Warning,
