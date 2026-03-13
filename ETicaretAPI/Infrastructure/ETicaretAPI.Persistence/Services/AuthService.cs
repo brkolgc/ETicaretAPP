@@ -9,6 +9,7 @@ using ETicaretAPI.Domain.Entities.Identity;
 using Google.Apis.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
@@ -21,13 +22,15 @@ namespace ETicaretAPI.Persistence.Services
         readonly UserManager<Domain.Entities.Identity.AppUser> _userManager;
         readonly ITokenHandler _tokenHandler;
         readonly SignInManager<Domain.Entities.Identity.AppUser> _signInManager;
-        public AuthService(IHttpClientFactory httpClientFactory, IConfiguration configuration, UserManager<Domain.Entities.Identity.AppUser> userManager, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager)
+        readonly IUserService _userService;
+        public AuthService(IHttpClientFactory httpClientFactory, IConfiguration configuration, UserManager<Domain.Entities.Identity.AppUser> userManager, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService)
         {
             _httpClient = httpClientFactory.CreateClient();
             _configuration = configuration;
             _userManager = userManager;
             _tokenHandler = tokenHandler;
             _signInManager = signInManager;
+            _userService = userService;
         }
 
         async Task<Token> CreateUserExternalAsync(AppUser user, UserLoginInfo userLoginInfo, string email, string name, int accessTokenLifeTime)
@@ -65,6 +68,9 @@ namespace ETicaretAPI.Persistence.Services
 
                 //token üret
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
+
+                //refresh token'ı user tablosunda update ve expireddate belirle
+                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration);
 
                 return token;
             }
@@ -128,10 +134,29 @@ namespace ETicaretAPI.Persistence.Services
             if (result.Succeeded)
             {
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
+
+                //refresh token'ı user tablosunda update ve expireddate belirle
+                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration);
+
                 return token;
             }
 
             throw new AuthenticationErrorException();
+        }
+
+        public async Task<Token> RefreshTokenLoginAsync(string refreshToken)
+        {
+            AppUser? user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+            if (user != null && user?.RefreshTokenExpiredDate > DateTime.UtcNow)
+            {
+                Token token = _tokenHandler.CreateAccessToken(Convert.ToInt32(_configuration["JwtTokenLifeTimeSecond"]));
+                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration);
+
+                return token;
+            }
+            else
+                throw new NotFoundUserException();
         }
     }
 }

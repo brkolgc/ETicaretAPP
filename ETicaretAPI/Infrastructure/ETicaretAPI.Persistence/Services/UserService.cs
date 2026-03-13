@@ -1,17 +1,20 @@
 ﻿using ETicaretAPI.Application.Abstractions.Services;
 using ETicaretAPI.Application.DTOs.User;
+using ETicaretAPI.Application.Exceptions;
 using ETicaretAPI.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace ETicaretAPI.Persistence.Services
 {
     public class UserService : IUserService
     {
         readonly UserManager<Domain.Entities.Identity.AppUser> _userManager;
-
-        public UserService(UserManager<AppUser> userManager)
+        readonly IConfiguration _configuration;
+        public UserService(UserManager<AppUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         public async Task<CreateUserResponse> CreateAsync(CreateUser model)
@@ -33,6 +36,18 @@ namespace ETicaretAPI.Persistence.Services
                     response.Message += $"{error.Code} - {error.Description}";
 
             return response;
+        }
+
+        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenExpiredDate)
+        {
+            if (user != null)
+            {
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiredDate = accessTokenExpiredDate.AddSeconds(Convert.ToInt32(_configuration["JwtRefreshTokenLifeTimeSecond"]));
+                await _userManager.UpdateAsync(user);
+            }
+            else
+                throw new NotFoundUserException();
         }
     }
 }
