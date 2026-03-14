@@ -39,7 +39,7 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
     .AllowAnyHeader()
     .AllowAnyMethod()
-    .AllowCredentials()
+    .AllowCredentials() //signalr baðlantýsý için tanýmlandý
 ));
 
 #region Serilog

@@ -32,8 +32,8 @@ export class ProductService {
       });
   }
 
-  async read(page: number = 0, size: number = 5, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void): Promise<{ totalCount: number; products: List_Product[]; }> {
-    const promiseData: Promise<{ totalCount: number; products: List_Product[]; }> = this.httpClientService.get<{ totalCount: number; products: List_Product[]; }>({
+  async read(page: number = 0, size: number = 5, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void): Promise<{ totalProductCount: number; products: List_Product[]; }> {
+    const promiseData: Promise<{ totalProductCount: number; products: List_Product[]; }> = this.httpClientService.get<{ totalProductCount: number; products: List_Product[]; }>({
       controller: "products",
       queryString: `page=${page}&size=${size}`
     }).toPromise();
@@ -72,6 +72,17 @@ export class ProductService {
 
     await firstValueFrom(deleteObservable);
     successCallBack();
+  }
+
+  async changeShowcaseImage(imageId: string, productId: string, successCallBack?: () => void): Promise<void> {
+    const changeShowCaseImageObservable = this.httpClientService.put({
+      controller: "products",
+      action: "changeshowcaseimage",
+      //queryString: `imageId=${imageId}&productId=${productId}`
+    }, { imageId: imageId, productId: productId });
+
+    await firstValueFrom(changeShowCaseImageObservable);
+    successCallBack?.();
   }
 
 }

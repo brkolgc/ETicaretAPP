@@ -1,0 +1,18 @@
+.productContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.card {
+    width: 12rem;
+}
+
+.row {
+    margin-top: 1rem;
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+}

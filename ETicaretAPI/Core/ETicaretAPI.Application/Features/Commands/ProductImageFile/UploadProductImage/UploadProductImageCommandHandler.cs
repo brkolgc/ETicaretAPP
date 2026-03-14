@@ -35,6 +35,7 @@ namespace ETicaretAPI.Application.Features.Commands.ProductImageFile.UploadProdu
                 FileName = r.fileName,
                 Path = r.pathOrContainerName,
                 Storage = _storageService.StorageName,
+                Showcase = false,
                 Products = new List<Domain.Entities.Product>() { product }
             }).ToList());
 
