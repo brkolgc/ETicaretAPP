@@ -6,6 +6,7 @@
 bin/
 obj/
 appsettings.json
+logs/*.txt
 
 # Angular / Node.js
 ETicaretClient/node_modules/
