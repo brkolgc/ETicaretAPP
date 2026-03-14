@@ -67,7 +67,7 @@ namespace ETicaretAPI.Persistence.Services
                 await _userManager.AddLoginAsync(user, userLoginInfo); //aspNetUserLogins tablosuna kayıt at dış kaynaktan geldiği için
 
                 //token üret
-                Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
+                Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
 
                 //refresh token'ı user tablosunda update ve expireddate belirle
                 await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration);
@@ -133,7 +133,7 @@ namespace ETicaretAPI.Persistence.Services
 
             if (result.Succeeded)
             {
-                Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
+                Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
 
                 //refresh token'ı user tablosunda update ve expireddate belirle
                 await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration);
@@ -150,7 +150,7 @@ namespace ETicaretAPI.Persistence.Services
 
             if (user != null && user?.RefreshTokenExpiredDate > DateTime.UtcNow)
             {
-                Token token = _tokenHandler.CreateAccessToken(Convert.ToInt32(_configuration["JwtTokenLifeTimeSecond"]));
+                Token token = _tokenHandler.CreateAccessToken(Convert.ToInt32(_configuration["JwtTokenLifeTimeSecond"]), user);
                 await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration);
 
                 return token;
