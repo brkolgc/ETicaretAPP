@@ -59,7 +59,8 @@
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form> -->
                     <div class="d-flex">
-                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#basketModal">Sepet</button>
+                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#basketModal"
+                            (click)="loadComponent()">Sepet</button>
                     </div>
                 </div>
             </div>
@@ -80,4 +81,11 @@
 <ngx-spinner name="s2" size="default" type="ball-scale-multiple"></ngx-spinner>
 <ngx-spinner name="s3" size="default" type="ball-spin-clockwise-fade-rotating"></ngx-spinner>
 
-<app-baskets></app-baskets>
+<!-- <app-baskets></app-baskets> -->
+
+<!-- basket modal -->
+<div class="modal fade" id="basketModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <ng-template appDynamicLoadComponent></ng-template>
+    </div>
+</div>
