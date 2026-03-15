@@ -3,37 +3,44 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, of } from 'rxjs';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from '../ui/custom-toastr.service';
 import { UserAuthService } from './models/user-auth.service';
+import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { SpinnerType } from 'src/app/base/base.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpErrorHandlerInterceptorService implements HttpInterceptor {
 
-  constructor(private toastrService: CustomToastrService, private userAuthService: UserAuthService) { }
+  constructor(private toastrService: CustomToastrService, private userAuthService: UserAuthService, private router: Router, private spinner: NgxSpinnerService) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(catchError(error => {
       switch (error.status) {
         case HttpStatusCode.Unauthorized:
-          // this.toastrService.message("Oturumunuz sona ermiş. Lütfen tekrar giriş yapınız.", "Yetkisiz Erişim", {
-          //   messageType: ToastrMessageType.Warning,
-          //   position: ToastrPosition.BottomFullWidth
-          // });
-          // debugger;
-          // this.userAuthService.refreshTokenLogin(localStorage.getItem("refreshToken")).then(data=>{});
-
-          this.userAuthService.refreshTokenLogin(localStorage.getItem("refreshToken"))
+          this.userAuthService.refreshTokenLogin(localStorage.getItem("refreshToken"), (state) => {
+            if (!state) {
+              const url = this.router.url;
+              if (url === "/products")
+                this.toastrService.message("Sepete ürün eklemek için oturum açmanız gerekmektedir.", "Oturum Açınız", {
+                  messageType: ToastrMessageType.Warning,
+                  position: ToastrPosition.TopRight
+                });
+              else
+                this.toastrService.message(
+                  "Oturumunuz sona ermiş. Lütfen tekrar giriş yapınız.",
+                  "Yetkisiz Erişim",
+                  {
+                    messageType: ToastrMessageType.Warning,
+                    position: ToastrPosition.BottomFullWidth
+                  }
+                );
+            }
+          })
             .then(() => {
               // başarılı -> hiçbir şey yapma
             })
             .catch(() => {
-              this.toastrService.message(
-                "Oturumunuz sona ermiş. Lütfen tekrar giriş yapınız.",
-                "Yetkisiz Erişim",
-                {
-                  messageType: ToastrMessageType.Warning,
-                  position: ToastrPosition.BottomFullWidth
-                }
-              );
+              //başarısız log ...
             });
           break;
         case HttpStatusCode.Forbidden:
@@ -71,6 +78,7 @@ export class HttpErrorHandlerInterceptorService implements HttpInterceptor {
           });
           break;
       }
+      this.spinner.hide(SpinnerType.BallAtom);
       return of(error);
     }));
   }

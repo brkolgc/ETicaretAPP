@@ -24,6 +24,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpContextAccessor(); //clienttan gelen requestte oluþturulan httpcontext nesnesine katmanlardaki classlardan eriþebilmemizi saðlayan servis (username v.s bilgilerine ulaþabilmek için sepet iþlemleri için kullandým)
+
 //ioc container service
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();

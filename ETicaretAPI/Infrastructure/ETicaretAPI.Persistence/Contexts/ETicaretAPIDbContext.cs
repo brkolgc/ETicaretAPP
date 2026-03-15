@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ETicaretAPI.Persistence.Contexts
 {
-    public class ETicaretAPIDbContext : IdentityDbContext<AppUser,AppRole,string>
+    public class ETicaretAPIDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
         //IoC Container'da DI ile talep edebilmek için constructor'a ekliyoruz
         public ETicaretAPIDbContext(DbContextOptions options) : base(options)
@@ -21,12 +21,28 @@ namespace ETicaretAPI.Persistence.Contexts
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
+        public DbSet<BasketItem> BasketItems { get; set; }
+
         #region Table Per Hierarchy
         public DbSet<Domain.Entities.File> Files { get; set; }
         public DbSet<ProductImageFile> ProductImageFiles { get; set; }
-        public DbSet<InvoiceFile> InvoiceFiles { get; set; } 
-
+        public DbSet<InvoiceFile> InvoiceFiles { get; set; }
         #endregion
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Order>()
+                .HasKey(o => o.Id);
+
+            builder.Entity<Basket>()
+                .HasOne(b => b.Order)
+                .WithOne(o => o.Basket)
+                .HasForeignKey<Order>(o => o.Id);
+
+            base.OnModelCreating(builder);
+        }
 
         //Insert&Update Interceptor
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

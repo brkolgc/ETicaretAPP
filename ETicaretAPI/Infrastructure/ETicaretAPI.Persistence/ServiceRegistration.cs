@@ -17,7 +17,8 @@ namespace ETicaretAPI.Persistence
         {
             services.AddDbContext<ETicaretAPIDbContext>(options => options.UseNpgsql(Configurations.ConnectionString));
 
-            services.AddIdentity<AppUser, AppRole>(options => {
+            services.AddIdentity<AppUser, AppRole>(options =>
+            {
                 options.Password.RequiredLength = 3;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireDigit = false;
@@ -32,6 +33,13 @@ namespace ETicaretAPI.Persistence
             services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
             services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
+
+            services.AddScoped<IBasketReadRepository, BasketReadRepository>();
+            services.AddScoped<IBasketWriteRepository, BasketWriteRepository>();
+            services.AddScoped<IBasketItemReadRepository, BasketItemReadRepository>();
+            services.AddScoped<IBasketItemWriteRepository, BasketItemWriteRepository>();
+
+
             services.AddScoped<IFileReadRepository, FileReadRepository>();
             services.AddScoped<IFileWriteRepository, FileWriteRepository>();
             services.AddScoped<IProductImageFileReadRepository, ProductImageFileReadRepository>();
@@ -43,7 +51,7 @@ namespace ETicaretAPI.Persistence
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IExternalAuthentication, AuthService>();
             services.AddScoped<IInternalAuthentication, AuthService>();
-
+            services.AddScoped<IBasketService, BasketService>();
         }
     }
 }
