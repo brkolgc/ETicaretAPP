@@ -1,3 +1,8 @@
 .inpQuantity{
     width:4rem;
 }
+
+ ::ng-deep .cdk-overlay-container {
+    position: fixed; 
+    z-index: 999999999999 !important
+}
