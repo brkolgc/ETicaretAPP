@@ -9,7 +9,7 @@ export class DynamicLoadComponentService {
   //ComponentFactory          :component'lerin instance'larını oluşturmak için kullanılan nesne
   //ComponentFactoryResolver  :belirli component için ComponentFactory'i resolve eden sınıf. "resolveComponentFactory" fonksiyonu aracılığıyla ilgili componente dair nesne oluşturur ve componentfactory döner
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor() { }
 
   async loadComponent(component: ComponentType, viewContainerRef: ViewContainerRef) {
     try {
@@ -21,7 +21,7 @@ export class DynamicLoadComponentService {
           break;
       }
       viewContainerRef.clear();
-      return viewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(_component));
+      return viewContainerRef.createComponent(_component);
     } catch (err) {
       console.log(err);
       return null;

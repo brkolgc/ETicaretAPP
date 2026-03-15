@@ -5,9 +5,10 @@ namespace ETicaretAPI.Application.Abstractions.Services
 {
     public interface IBasketService
     {
-        public Task<List<BasketItem>> GetBasketItemsAsync();
-        public Task AddItemToBasketAsync(VM_Create_BasketItem basketItem);
-        public Task UpdateQuantityAsync(VM_Update_BasketItem basketItem);
-        public Task RemoveBasketItemAsync(string basketItemId);
+        Task<List<BasketItem>> GetBasketItemsAsync();
+        Task AddItemToBasketAsync(VM_Create_BasketItem basketItem);
+        Task UpdateQuantityAsync(VM_Update_BasketItem basketItem);
+        Task RemoveBasketItemAsync(string basketItemId);
+        Basket? GetUserActiveBasket { get; }
     }
 }
