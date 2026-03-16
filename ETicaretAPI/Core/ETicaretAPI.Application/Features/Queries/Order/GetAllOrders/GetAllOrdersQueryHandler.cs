@@ -2,7 +2,7 @@
 using ETicaretAPI.Application.DTOs.Order;
 using MediatR;
 
-namespace ETicaretAPI.Application.Features.Queries.Order
+namespace ETicaretAPI.Application.Features.Queries.Order.GetAllOrders
 {
     public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQueryRequest, GetAllOrdersQueryResponse>
     {

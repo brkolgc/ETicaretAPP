@@ -6,7 +6,6 @@ import { ProductService } from 'src/app/services/common/models/product.service';
 import { List_Product_Image } from 'src/app/contracts/list_product_image';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerType } from 'src/app/base/base.component';
-import { MatCard } from '@angular/material/card';
 import { DialogService } from 'src/app/services/common/dialog.service';
 import { DeleteDialogComponent, DeleteState } from '../delete-dialog/delete-dialog.component';
 
