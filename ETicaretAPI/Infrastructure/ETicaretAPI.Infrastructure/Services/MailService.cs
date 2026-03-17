@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 
 namespace ETicaretAPI.Infrastructure.Services
 {
@@ -14,12 +15,12 @@ namespace ETicaretAPI.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public async Task SendMessageAsync(string to, string cc, string subject, string body, bool isBodyHtml = true)
+        public async Task SendMailAsync(string to, string cc, string subject, string body, bool isBodyHtml = true)
         {
-            await SendMessageAsync(new[] { to }, cc, subject, body, isBodyHtml);
+            await SendMailAsync(new[] { to }, cc, subject, body, isBodyHtml);
         }
 
-        public async Task SendMessageAsync(string[] tos, string cc, string subject, string body, bool isBodyHtml = true)
+        public async Task SendMailAsync(string[] tos, string cc, string subject, string body, bool isBodyHtml = true)
         {
             MailMessage mail = new();
             mail.IsBodyHtml = isBodyHtml;
@@ -39,6 +40,24 @@ namespace ETicaretAPI.Infrastructure.Services
             smtp.EnableSsl = Convert.ToBoolean(_configuration["Mail:EnableSsl"]);
 
             await smtp.SendMailAsync(mail);
+        }
+
+        public async Task SendPasswordResetMailAsync(string to, string userId, string resetToken)
+        {
+            var resetUrl = $"{_configuration["AngularClientUrl"]}/update-password/{userId}/{resetToken}";
+
+            var mailBody = $@"
+                            <p>Merhaba,</p>
+                            <p>Eğer yeni şifre talebinde bulunduysanız aşağıdaki linkten şifrenizi yenileyebilirsiniz:</p>
+                            <p><strong><a target=""_blank"" href=""{resetUrl}"">Yeni şifre talebi için tıklayınız...</a></strong></p>
+                            <p style=""font-size:12px;"">
+                            NOT: Bu şifre yenileme talebini siz yapmadıysanız, lütfen bu e-postayı dikkate almayınız.
+                            </p>
+                            <br>
+                            <p><strong>E-Ticaret Demo</strong></p>
+                            ";
+
+            await SendMailAsync(to, "", "Şifre Yenileme Talebi", mailBody);
         }
     }
 }
