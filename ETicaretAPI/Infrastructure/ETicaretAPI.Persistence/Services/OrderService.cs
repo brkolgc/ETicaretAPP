@@ -1,8 +1,10 @@
 ﻿using ETicaretAPI.Application.Abstractions.Services;
 using ETicaretAPI.Application.DTOs.Basket;
 using ETicaretAPI.Application.DTOs.Order;
+using ETicaretAPI.Application.Exceptions;
 using ETicaretAPI.Application.Repositories;
 using ETicaretAPI.Application.Utilities;
+using ETicaretAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETicaretAPI.Persistence.Services
@@ -11,11 +13,13 @@ namespace ETicaretAPI.Persistence.Services
     {
         readonly IOrderWriteRepository _orderWriteRepository;
         readonly IOrderReadRepository _orderReadRepository;
+        readonly ICompletedOrderWriteRepository _completedOrderWriteRepository;
 
-        public OrderService(IOrderWriteRepository orderWriteRepository, IOrderReadRepository orderReadRepository)
+        public OrderService(IOrderWriteRepository orderWriteRepository, IOrderReadRepository orderReadRepository, ICompletedOrderWriteRepository completedOrderWriteRepository)
         {
             _orderWriteRepository = orderWriteRepository;
             _orderReadRepository = orderReadRepository;
+            _completedOrderWriteRepository = completedOrderWriteRepository;
         }
 
         public async Task CreateOrderAsync(CreateOrder createOrder)
@@ -40,8 +44,9 @@ namespace ETicaretAPI.Persistence.Services
                    Id = o.Id.ToString(),
                    CreatedDate = o.CreatedDate,
                    OrderCode = o.OrderCode,
-                   TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Product.Price * bi.Quantity),
-                   UserName = o.Basket.User.UserName
+                   TotalPrice = o.Basket.BasketItems.Sum(bi => (float?)(bi.Product.Price * bi.Quantity)) ?? 0,
+                   UserName = o.Basket.User.UserName,
+                   Completed = o.CompletedOrder != null
                });
 
             return (await query.Skip(page * size).Take(size).ToListAsync(), await query.CountAsync());
@@ -51,7 +56,7 @@ namespace ETicaretAPI.Persistence.Services
         {
             SingleOrder? singleOrder = await _orderReadRepository.Table
                   .AsNoTracking()
-                  .Where(o=>o.Id == Guid.Parse(id))
+                  .Where(o => o.Id == Guid.Parse(id))
                   .Select(o => new SingleOrder
                   {
                       Id = o.Id.ToString(),
@@ -59,6 +64,7 @@ namespace ETicaretAPI.Persistence.Services
                       OrderCode = o.OrderCode,
                       CreatedDate = o.CreatedDate,
                       Description = o.Description,
+                      Completed = o.CompletedOrder != null,
                       BasketItems = o.Basket.BasketItems.Select(bi => new OrderBasketItem()
                       {
                           Name = bi.Product.Name,
@@ -68,6 +74,28 @@ namespace ETicaretAPI.Persistence.Services
                   }).FirstOrDefaultAsync();
 
             return singleOrder;
+        }
+
+        public async Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id)
+        {
+          CompletedOrderDTO? order =  await _orderReadRepository.Table
+                .AsNoTracking()
+                .Where(o => o.Id == Guid.Parse(id))
+                .Select(o => new CompletedOrderDTO()
+                {
+                    OrderCode = o.OrderCode,
+                    OrderDate = o.CreatedDate,
+                    NameSurname = o.Basket.User.NameSurname,
+                    Email = o.Basket.User.Email
+                }).FirstOrDefaultAsync();
+
+            if (order != null)
+            {
+                await _completedOrderWriteRepository.AddAsync(new() { OrderId = Guid.Parse(id) });
+                return (await _completedOrderWriteRepository.SaveAsync() > 0, order);
+            }
+            else
+                throw new CompleteOrderFailedException();
         }
     }
 }

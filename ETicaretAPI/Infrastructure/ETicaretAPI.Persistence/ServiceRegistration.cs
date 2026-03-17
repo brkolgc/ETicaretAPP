@@ -29,8 +29,6 @@ namespace ETicaretAPI.Persistence
             }).AddEntityFrameworkStores<ETicaretAPIDbContext>()
             .AddDefaultTokenProviders();//AddDefaultTokenProviders => password reset token üretmesi için
 
-
-
             services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
             services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
             services.AddScoped<IOrderReadRepository, OrderReadRepository>();
@@ -57,6 +55,9 @@ namespace ETicaretAPI.Persistence
             services.AddScoped<IInternalAuthentication, AuthService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IOrderService, OrderService>();
+
+            services.AddScoped<ICompletedOrderReadRepository, CompletedOrderReadRepository>();
+            services.AddScoped<ICompletedOrderWriteRepository, CompletedOrderWriteRepository>();
         }
     }
 }

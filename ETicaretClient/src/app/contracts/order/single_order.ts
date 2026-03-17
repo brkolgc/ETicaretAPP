@@ -5,6 +5,7 @@ export class SingleOrder {
     id: string;
     orderCode: string;
     basketItems: BasketItems[];
+    completed:boolean;
     // basketItems:any[];
 }
 

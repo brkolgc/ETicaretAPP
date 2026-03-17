@@ -23,6 +23,7 @@ namespace ETicaretAPI.Persistence.Contexts
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
+        public DbSet<CompletedOrder> CompletedOrders { get; set; }
 
         #region Table Per Hierarchy
         public DbSet<Domain.Entities.File> Files { get; set; }
@@ -44,6 +45,11 @@ namespace ETicaretAPI.Persistence.Contexts
                 .HasOne(b => b.Order)
                 .WithOne(o => o.Basket)
                 .HasForeignKey<Order>(o => o.Id);
+
+            builder.Entity<Order>()
+                .HasOne(o => o.CompletedOrder)
+                .WithOne(c => c.Order)
+                .HasForeignKey<CompletedOrder>(c => c.OrderId);
 
             base.OnModelCreating(builder);
         }
