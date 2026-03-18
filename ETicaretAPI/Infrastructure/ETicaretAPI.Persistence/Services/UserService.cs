@@ -4,6 +4,7 @@ using ETicaretAPI.Application.Exceptions;
 using ETicaretAPI.Application.Helpers;
 using ETicaretAPI.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace ETicaretAPI.Persistence.Services
@@ -63,6 +64,50 @@ namespace ETicaretAPI.Persistence.Services
                 else
                     throw new PasswordChangeFailedException();
             }
+        }
+
+        public async Task<(List<ListUser>, int TotalUsersCount)> GetAllUsersAsync(int page, int size)
+        {
+            IQueryable<AppUser> query = _userManager.Users;
+            var totalUsersCount = await query.CountAsync();
+
+            List<ListUser> users = await query.Skip(page * size)
+             .Take(size)
+             .Select(u => new ListUser()
+             {
+                 Id = u.Id,
+                 Email = u.Email,
+                 NameSurname = u.NameSurname,
+                 TwoFactorEnabled = u.TwoFactorEnabled,
+                 UserName = u.UserName
+             })
+             .ToListAsync();
+
+            return (users, totalUsersCount);
+        }
+
+        public async Task AssignRoleToUserAsync(string userId, string[] roles)
+        {
+            AppUser? user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, userRoles);
+
+                await _userManager.AddToRolesAsync(user, roles);
+            }
+        }
+
+        public async Task<string[]> GetRolesToUserAsync(string userId)
+        {
+            AppUser? user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                return userRoles.ToArray();
+            }
+            return new string[] { };
         }
     }
 }
