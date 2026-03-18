@@ -1,6 +1,6 @@
 ﻿using ETicaretAPI.Application.DTOs.Configuration;
 
-namespace ETicaretAPI.Application.Features.Queries.Authorization
+namespace ETicaretAPI.Application.Features.Queries.Authorization.GetAuthorizeDefinitionEndpoints
 {
     public class GetAuthorizeDefinitionEndpointsQueryResponse
     {

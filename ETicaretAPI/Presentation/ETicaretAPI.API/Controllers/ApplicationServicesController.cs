@@ -1,7 +1,7 @@
 ﻿using ETicaretAPI.Application.Abstractions.Services.Configurations;
 using ETicaretAPI.Application.CustomAttribues;
 using ETicaretAPI.Application.Enums;
-using ETicaretAPI.Application.Features.Queries.Authorization;
+using ETicaretAPI.Application.Features.Queries.Authorization.GetAuthorizeDefinitionEndpoints;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

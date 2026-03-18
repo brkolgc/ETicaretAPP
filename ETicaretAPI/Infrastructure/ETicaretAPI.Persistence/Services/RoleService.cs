@@ -30,10 +30,15 @@ namespace ETicaretAPI.Persistence.Services
         {
             var query = _roleManager.Roles;
             int totalCount = await query.CountAsync();
-            var roles = await _roleManager.Roles
-                .Skip(page * size)
-                .Take(size)
-                .ToDictionaryAsync(role => role.Id, role => role.Name);
+            IDictionary<string, string?> roles;
+
+            if (page == -1 || size == -1)
+                roles = await query.ToDictionaryAsync(role => role.Id, role => role.Name);
+            else
+                roles = await query
+                        .Skip(page * size)
+                        .Take(size)
+                        .ToDictionaryAsync(role => role.Id, role => role.Name);
 
             return (roles, totalCount);
         }
