@@ -1,15 +1,13 @@
 using ETicaretAPI.API.Configurations.ColumnWriters;
 using ETicaretAPI.API.Extensions;
+using ETicaretAPI.API.Filters;
 using ETicaretAPI.Application;
 using ETicaretAPI.Application.Validators.Products;
 using ETicaretAPI.Infrastructure;
-using ETicaretAPI.Infrastructure.Enums;
 using ETicaretAPI.Infrastructure.Filters;
 using ETicaretAPI.Infrastructure.Services.Storage.Azure;
-using ETicaretAPI.Infrastructure.Services.Storage.Local;
 using ETicaretAPI.Persistence;
 using ETicaretAPI.SignalR;
-using ETicaretAPI.SignalR.Hubs;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -78,8 +76,11 @@ builder.Services.AddHttpLogging(logging =>
 });
 #endregion
 
-builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
-    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true); //mevcut validation davranýþýný devre dýþý býrak custom ayarlayabilmek için (custom validation'ý kullanmak için)
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+    options.Filters.Add<RolePermissionFilter>(); //endpoint-user-role kontrol
+}).ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true); //mevcut validation davranýþýný devre dýþý býrak custom ayarlayabilmek için (custom validation'ý kullanmak için)
 
 //fluent validation
 builder.Services.AddFluentValidationAutoValidation();

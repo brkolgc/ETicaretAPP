@@ -47,8 +47,8 @@ export class AuthorizeUserDialogComponent extends BaseDialog<AuthorizeUserDialog
     this.spinner.show(SpinnerType.BallAtom);
     this.userService.assignRoleToUser(this.data, roles,
       () => {
-        debugger;
         this.spinner.hide(SpinnerType.BallAtom);
+        
       }, error => {
         console.log(error);
       });
