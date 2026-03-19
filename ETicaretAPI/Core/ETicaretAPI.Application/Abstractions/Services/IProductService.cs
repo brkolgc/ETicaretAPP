@@ -2,6 +2,6 @@
 {
     public interface IProductService
     {
-
+        Task<byte[]> QRCodeToProductAsync(string productId);
     }
 }
